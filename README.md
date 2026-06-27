@@ -25,7 +25,7 @@ curl -sSL https://raw.githubusercontent.com/gneol-org/gneol-release/main/install
 
 ### Manual download
 
-Download from the [Releases](https://github.com/gneol-org/gneol-release/releases) page.
+Download from the [Releases](https://github.com/Gneol/Gneol/releases) page.
 
 ## Releasing
 

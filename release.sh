@@ -64,4 +64,4 @@ else
 fi
 
 echo "✅ Release $VERSION created and uploaded!"
-echo "   https://github.com/gneol-org/gneol-release/releases/tag/$VERSION"
+echo "   https://github.com/Gneol/Gneol/releases/tag/$VERSION"

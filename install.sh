@@ -5,7 +5,7 @@
 
 set -e
 
-REPO="gneol-org/gneol-release"
+REPO="Gneol/Gneol"
 VERSION="latest"
 INSTALL_DIR="/usr/local/bin"
 
