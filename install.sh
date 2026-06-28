@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Gneol Installer
-# Downloads the correct binaries for your OS and architecture
+# Downloads the correct platform archive (tar.gz) containing CLI, brain, and Prisma engine
 
 set -e
 
@@ -30,7 +30,7 @@ done
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
-# Normalize arch
+# Normalize arch and set archive name
 case "$ARCH" in
   x86_64) ARCH="x64" ;;
   aarch64) ARCH="arm64" ;;
@@ -38,17 +38,13 @@ case "$ARCH" in
   *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
-# Select download URLs
-if [ "$OS" = "linux" ]; then
-  CLI_BINARY="gneol-linux"
-  BRAIN_BINARY="gneol-brain-linux"
-elif [ "$OS" = "darwin" ]; then
-  CLI_BINARY="gneol-darwin"
-  BRAIN_BINARY="gneol-brain-darwin"
-else
-  echo "Unsupported OS: $OS"
-  exit 1
-fi
+case "$OS" in
+  linux) PLATFORM="linux-x64" ;;
+  darwin) PLATFORM="darwin-arm64" ;;
+  *) echo "Unsupported OS: $OS"; exit 1 ;;
+esac
+
+ARCHIVE="gneol-${PLATFORM}.tar.gz"
 
 if [ "$VERSION" = "latest" ]; then
   BASE_URL="https://github.com/$REPO/releases/latest/download"
@@ -56,24 +52,33 @@ else
   BASE_URL="https://github.com/$REPO/releases/download/$VERSION"
 fi
 
-echo "📦 Downloading Gneol binaries for $OS-$ARCH..."
+echo "📦 Downloading Gneol for $PLATFORM..."
 echo ""
 
-# Download CLI
-CLI_URL="$BASE_URL/$CLI_BINARY"
-echo "  → $CLI_BINARY"
-curl -sSL "$CLI_URL" -o "$INSTALL_DIR/gneol"
-chmod +x "$INSTALL_DIR/gneol"
+TMP_ARCHIVE="/tmp/gneol-${PLATFORM}.tar.gz"
 
-# Download Brain
-BRAIN_URL="$BASE_URL/$BRAIN_BINARY"
-echo "  → $BRAIN_BINARY"
-curl -sSL "$BRAIN_URL" -o "$INSTALL_DIR/gneol-brain"
+# Download archive
+ARCHIVE_URL="$BASE_URL/$ARCHIVE"
+echo "  → $ARCHIVE"
+curl -sSL "$ARCHIVE_URL" -o "$TMP_ARCHIVE"
+
+# Create install directory if needed
+mkdir -p "$INSTALL_DIR"
+
+# Extract archive into install directory
+tar -xzf "$TMP_ARCHIVE" -C "$INSTALL_DIR"
+
+# Set permissions
+chmod +x "$INSTALL_DIR/gneol"
 chmod +x "$INSTALL_DIR/gneol-brain"
+
+# Clean up
+rm -f "$TMP_ARCHIVE"
 
 echo ""
 echo "✅ Gneol installed!"
-echo "   gneol      → $INSTALL_DIR/gneol"
-echo "   gneol-brain → $INSTALL_DIR/gneol-brain"
+echo "   gneol              → $INSTALL_DIR/gneol"
+echo "   gneol-brain         → $INSTALL_DIR/gneol-brain"
+echo "   Prisma engine      → $INSTALL_DIR/*.dylib.node or *.so.node"
 echo ""
 echo "Run 'gneol --help' to get started."
