@@ -14,13 +14,13 @@ Precompiled binaries for the Gneol AI platform.
 ### Quick install (recommended)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/gneol-org/gneol-release/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash
 ```
 
 ### Install a specific version
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/gneol-org/gneol-release/main/install.sh | bash -s -- --version v0.2.5
+curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash -s -- --version v0.2.5
 ```
 
 ### Manual download
