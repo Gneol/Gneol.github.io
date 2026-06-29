@@ -81,4 +81,7 @@ echo "   gneol              → $INSTALL_DIR/gneol"
 echo "   gneol-brain         → $INSTALL_DIR/gneol-brain"
 echo "   Prisma engine      → $INSTALL_DIR/*.dylib.node or *.so.node"
 echo ""
+echo "Starting Gneol server..."
+"$INSTALL_DIR/gneol" server start
+
 echo "Run 'gneol --help' to get started."

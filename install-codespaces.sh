@@ -39,4 +39,6 @@ rm -f "$TMPFILE"
 
 echo "✅ Gneol installed successfully!"
 echo "   You may need to restart your terminal or run: source ~/.bashrc"
-echo "   Then try: gneol --help"
+echo "   Starting Gneol server..."
+"$INSTALL_DIR/gneol" server start
+
