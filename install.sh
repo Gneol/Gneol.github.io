@@ -5,6 +5,34 @@
 
 set -e
 
+# Function to stop running gneol processes
+stop_running_gneol() {
+  local pids
+  pids=$(pgrep -x gneol 2>/dev/null || true)
+  if [ -n "$pids" ]; then
+    echo "⚠️  Gneol is currently running (PID(s): $pids)."
+    echo "   To avoid file locks during installation, running instances should be stopped."
+    read -p "   Stop all running gneol processes? [Y/n] " -r response
+    case "$response" in
+      [nN]|[nN][oO])
+        echo "❌ Installation aborted. Please stop gneol manually and try again."
+        exit 1
+        ;;
+      *)
+        echo "🛑 Stopping gneol..."
+        pkill -x gneol 2>/dev/null || true
+        sleep 1
+        if pgrep -x gneol >/dev/null 2>&1; then
+          echo "   Force stopping remaining processes..."
+          pkill -x -9 gneol 2>/dev/null || true
+        fi
+        echo "✅ All gneol processes stopped."
+        ;;
+    esac
+  fi
+}
+
+
 REPO="Gneol/Gneol"
 VERSION="latest"
 INSTALL_DIR="/usr/local/bin"
@@ -53,6 +81,10 @@ else
 fi
 
 echo "📦 Downloading Gneol for $PLATFORM..."
+# Check and stop running gneol processes
+stop_running_gneol
+
+
 echo ""
 
 TMP_ARCHIVE="/tmp/gneol-${PLATFORM}.tar.gz"

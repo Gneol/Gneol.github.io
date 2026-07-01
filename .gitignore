@@ -9,3 +9,4 @@ car_render.png
 error.txt
 *.tar.gz
 release.sh
+local-install.sh
