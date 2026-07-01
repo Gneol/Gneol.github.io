@@ -10,3 +10,4 @@ error.txt
 *.tar.gz
 release.sh
 local-install.sh
+package-release.mjs
