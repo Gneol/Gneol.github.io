@@ -11,3 +11,6 @@ error.txt
 release.sh
 local-install.sh
 package-release.mjs
+.ttc_id.txt
+debug.json
+msg_sys.txt

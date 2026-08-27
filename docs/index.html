@@ -145,11 +145,12 @@
       <nav class="sidebar">
         <strong>Contents</strong>
         <br /><br />
-        <a href="#getting-started">1. Getting Started</a>
-        <a href="#architecture">2. Architecture</a>
-        <a href="#path-resolution">3. Path Resolution</a>
-        <a href="#installation-deployment">4. Installation &amp; Deployment</a>
-        <a href="#directives">5. Directives</a>
+        <a href="#installation">1. Installation</a>
+        <a href="#getting-started">2. Getting Started</a>
+        <a href="#architecture">3. Architecture</a>
+        <a href="#path-resolution">4. Path Resolution</a>
+        <a href="#installation-deployment">5. Installation &amp; Deployment</a>
+        <a href="#directives">6. Directives</a>
         <a href="#program">program()</a>
         <a href="#model">model()</a>
         <a href="#subagent">subagent()</a>
@@ -159,21 +160,33 @@
         <a href="#on">on() — Event Triggers</a>
         <a href="#tool">tool() — Custom Tools</a>
         <a href="#mcp">mcp() — MCP Servers</a>
-        <a href="#built-in-events">6. Built-in Events</a>
-        <a href="#troubleshooting">7. Troubleshooting</a>
-        <a href="#complete-example">8. Complete Example</a>
+        <a href="#built-in-events">7. Built-in Events</a>
+        <a href="#troubleshooting">8. Troubleshooting</a>
+        <a href="#complete-example">9. Complete Example</a>
       </nav>
 
       <main class="content">
         <h1>GNEOL Program Format Reference</h1>
         <p>A <code>.gneol</code> file defines a program for the Gneol platform. This document covers everything you need to write, deploy, and understand <code>.gneol</code> programs.</p>
 
+        <h2 id="installation">Installation</h2>
+        <h3>Quick install (recommended)</h3>
+<pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash</code></pre>
+        <h3>Install a specific version</h3>
+<pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash -s -- --version v0.2.5</code></pre>
+        <h3>Manual download</h3>
+        <p>Download from the <a href="https://github.com/Gneol/Gneol/releases" target="_blank" rel="noopener">Releases</a> page.</p>
+
         <h2 id="getting-started">Getting Started</h2>
         <p>A minimal <code>.gneol</code> program is just a header:</p>
 <pre><code>program("Hello World")
   .model("fast-llm")</code></pre>
+        <div class="note"><strong>Note:</strong> model tags that are not declared in the file must already exist on the server (e.g. pre-cached tags shipped with fresh installs or added via <code>gneol model</code>).</div>
         <p>Save it as <code>hello.gneol</code>, then deploy:</p>
-<pre><code>gneol-cli deploy -f hello.gneol</code></pre>
+<pre><code>gneol deploy -f hello.gneol</code></pre>
+        <p>Then talk to your agent:</p>
+<pre><code>gneol        # start an interactive session in the current directory
+gneol -a     # list and select an existing agent, then start chatting</code></pre>
         <p>That creates an agent named after your program title. Agents are the workers of Gneol: they receive messages, call functions, and execute triggers. From here you can add models, subagents, triggers, tools, and MCP servers as described below.</p>
 
         <h2 id="architecture">Architecture</h2>
@@ -202,8 +215,8 @@
 
         <h2 id="installation-deployment">Installation &amp; Deployment</h2>
         <p>Programs are deployed with the Gneol CLI. Start the server first if it isn't already running:</p>
-<pre><code>gneol-cli start          # start the server (--daemonize to run in background)
-gneol-cli deploy -f path/to/file.gneol</code></pre>
+<pre><code>gneol start          # start the server (--daemonize to run in background)
+gneol deploy -f path/to/file.gneol</code></pre>
         <p><code>deploy</code> reconciles server state with your <code>.gneol</code> script:</p>
         <ol>
           <li>Parses the <code>.gneol</code> file and its <code>import()</code>s.</li>
@@ -217,26 +230,28 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
         <h3>Other useful commands</h3>
         <table>
           <tr><th>Command</th><th>Purpose</th></tr>
-          <tr><td><code>gneol-cli agent</code></td><td>List and select an existing agent.</td></tr>
-          <tr><td><code>gneol-cli model</code></td><td>Manage models.</td></tr>
-          <tr><td><code>gneol-cli mcp</code></td><td>Manage MCP servers.</td></tr>
-          <tr><td><code>gneol-cli tool</code></td><td>Manage tools.</td></tr>
-          <tr><td><code>gneol-cli event</code></td><td>Manage events.</td></tr>
-          <tr><td><code>gneol-cli schedule</code></td><td>Manage scheduled triggers.</td></tr>
-          <tr><td><code>gneol-cli secrets set &lt;key&gt; &lt;value&gt;</code></td><td>Store an API key securely.</td></tr>
-          <tr><td><code>gneol-cli convert</code></td><td>Convert <code>.gneol</code> to/from JSON or YAML.</td></tr>
-          <tr><td><code>gneol-cli rollback [target]</code></td><td>Rollback a previous deployment or resource change.</td></tr>
-          <tr><td><code>gneol-cli stop</code></td><td>Stop the server.</td></tr>
+          <tr><td><code>gneol agent list</code></td><td>List agents on the server.</td></tr>
+          <tr><td><code>gneol agent scaffold &lt;name&gt;</code></td><td>Generate an agent scaffold as a <code>.gneol</code> snippet.</td></tr>
+          <tr><td><code>gneol model list</code></td><td>List models on the server.</td></tr>
+          <tr><td><code>gneol mcp list</code></td><td>List MCP servers.</td></tr>
+          <tr><td><code>gneol tool list</code></td><td>List tools.</td></tr>
+          <tr><td><code>gneol event list</code></td><td>List events.</td></tr>
+          <tr><td><code>gneol schedule list</code></td><td>List scheduled triggers.</td></tr>
+          <tr><td><code>gneol secrets &lt;action&gt; [key] [value]</code></td><td>Manage encrypted API key store (<code>list</code>, <code>get</code>, <code>set</code>, <code>delete</code>).</td></tr>
+          <tr><td><code>gneol convert</code></td><td>Convert <code>.gneol</code> to/from JSON or YAML.</td></tr>
+          <tr><td><code>gneol rollback [target]</code></td><td>Rollback a previous deployment or resource change.</td></tr>
+          <tr><td><code>gneol stop</code></td><td>Stop the server.</td></tr>
+          <tr><td><code>gneol -a</code></td><td>List and select an existing agent, then start chatting.</td></tr>
         </table>
-        <p>Run <code>gneol-cli --help</code> for the full command list.</p>
+        <p>Run <code>gneol --help</code> for the full command list.</p>
 
         <h2 id="directives">Directives</h2>
 
         <h3 id="program">1. program()</h3>
-        <p>The program header. Every <code>.gneol</code> file must start with exactly one <code>program()</code> directive.</p>
+        <p>The program header. Every <code>.gneol</code> file must contain exactly one <code>program()</code> directive. <code>import()</code> directives may appear before it; all other directives must come after.</p>
 <pre><code>program("Title")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.model("tag")</code></td><td>Assigns the parent agent's model tag.</td></tr>
           <tr><td><code>.use("agentId")</code></td><td>Binds the program to a specific existing agent. Usually auto-injected on install.</td></tr>
           <tr><td><code>.env("path")</code></td><td>Specifies an env file path (default: auto-detect).</td></tr>
@@ -254,7 +269,7 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
         <p>Declares a model binding for a tag used by agents, subagents, or summarization.</p>
 <pre><code>model("tag")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.provider("name")</code></td><td>The provider name (e.g., <code>openrouter</code>). Required if <code>.apiKey()</code> is set.</td></tr>
           <tr><td><code>.modelId("id")</code></td><td>The model identifier (e.g., <code>openai/gpt-4o</code>).</td></tr>
           <tr><td><code>.apiKey("ENV_VAR")</code></td><td>Env variable name holding the API key.</td></tr>
@@ -263,7 +278,14 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
           <tr><td><code>.rateLimit(10)</code></td><td>Requests per minute.</td></tr>
         </table>
         <div class="note"><strong>Validation:</strong> <code>provider</code> and <code>apiKey</code> must always be paired.</div>
-<pre><code>model("eagle-eye")
+<pre><code>model("deepseek-v4-flash")
+  .provider("openrouter")
+  .modelId("deepseek/deepseek-chat")
+  .apiKey("DEEPSEEK_API_KEY")
+  .temperature(0.7)
+  .maxTokens(4000)
+
+model("eagle-eye")
   .provider("openrouter")
   .modelId("openai/gpt-4o")
   .apiKey("OPENROUTER_API_KEY")
@@ -274,7 +296,7 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
         <p>Declares a specialized child agent. (The older <code>sentinel()</code> keyword is deprecated — use <code>subagent()</code>.)</p>
 <pre><code>subagent("Name")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.model("tag")</code></td><td>Assigns a model tag (empty name = wildcard for all).</td></tr>
           <tr><td><code>.id("agent_id")</code></td><td>Assigns an immutable identifier (used for lookups on re-parse).</td></tr>
           <tr><td><code>.description("text")</code></td><td>Sets the subagent's specialty/description (updates on re-parse).</td></tr>
@@ -282,7 +304,14 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
         </table>
         <p>All sub-functions are optional per subagent.</p>
 <pre><code>subagent("Marcus")
-  .model("eagle-eye")
+  .model("deepseek-v4-flash")
+  .provider("openrouter")
+  .modelId("deepseek/deepseek-chat")
+  .apiKey("DEEPSEEK_API_KEY")
+  .temperature(0.7)
+  .maxTokens(4000)
+
+model("eagle-eye")
   .description("CI monitoring specialist")
   .backstory("You are a CI sentinel. Watch pipelines and report failures.")</code></pre>
         <p>A wildcard declaration applies its model to all subagents that don't declare one:</p>
@@ -292,7 +321,7 @@ gneol-cli deploy -f path/to/file.gneol</code></pre>
         <p>Configures how conversations are summarized for the program's agents.</p>
 <pre><code>summarization()</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.model("tag")</code></td><td>Model tag to use for summarization.</td></tr>
           <tr><td><code>.prompt("...")</code></td><td>Summarization prompt (inline text, file path, or URL).</td></tr>
         </table>
@@ -325,7 +354,7 @@ model("shared-model")
         <p>Fires are executed while the server is running; a missed fire while the server is down is not retroactively queued.</p>
         <h4>Sub-functions</h4>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.max(N)</code></td><td>Max triggers before auto-stop.</td></tr>
           <tr><td><code>.do("message")</code></td><td>Action message sent to the agent (or routed subagent). Chainable: <code>.do("a").do("b")</code>.</td></tr>
           <tr><td><code>.resource("path")</code></td><td>Attach file/URL context to the action.</td></tr>
@@ -351,9 +380,9 @@ model("shared-model")
         <p>Fires when an event is received. Events are pushed to the agent via the platform; see <a href="#built-in-events">Built-in Events</a>.</p>
 <pre><code>on("eventName")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.maxSize(N)</code></td><td>Max pending jobs before auto-fire (fires once threshold reached).</td></tr>
-          <tr><td><code>.delay(Ns)</code></td><td>Debounce window in seconds (coalesces rapid events).</td></tr>
+          <tr><td><code>.delay(N)</code></td><td>Debounce window in seconds (coalesces rapid events).</td></tr>
           <tr><td><code>.do("message")</code></td><td>Action message. Chainable: <code>.do("a").do("b")</code>.</td></tr>
           <tr><td><code>.resource("path")</code></td><td>Attach file/URL context.</td></tr>
           <tr><td><code>.if("condition text")</code></td><td>LLM-evaluated condition.</td></tr>
@@ -372,30 +401,11 @@ model("shared-model")
         <p>Declares a custom tool module from a worker script.</p>
 <pre><code>tool("name")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.script("path")</code></td><td>Path to the worker script (relative or absolute).</td></tr>
           <tr><td><code>.description("text")</code></td><td>Human-readable description of the module.</td></tr>
         </table>
-        <p><strong>Worker script requirements:</strong></p>
-        <ul>
-          <li>Import <code>{ Module }</code> from <code>gneol-sdk</code> (npm) and <code>{ z }</code> from <code>zod</code>.</li>
-          <li>Instantiate <code>new Module("Name")</code>.</li>
-          <li>Register tools via <code>.tool({...})</code> — <code>parameters</code> and <code>output</code> must be Zod schemas, not strings.</li>
-          <li>Call <code>.parse()</code> to start the worker.</li>
-        </ul>
-<pre><code>import { Module } from "gneol-sdk";
-import { z } from "zod";
-
-const mod = new Module("MyTool");
-mod.tool({
-    name: "myFunc",
-    description: "Does something useful",
-    parameters: z.object({ input: z.string() }),
-    output: z.object({ result: z.string() }),
-    func: async (args) => { /* runs when called */ },
-    action: async (args) => { /* runs for action logs */ },
-});
-mod.parse();</code></pre>
+        <p>Worker scripts are written with the Gneol SDK (<code>gneol-sdk</code>, npm). See the SDK documentation for how to define tools.</p>
         <p>After install, tools are available as <code>tool.&lt;ModuleName&gt;.&lt;toolName&gt;()</code>. Action logs from <code>action()</code> are forwarded to the session stream.</p>
 <pre><code>tool("CustomTool")
   .script("./custom_tool.js")</code></pre>
@@ -404,7 +414,7 @@ mod.parse();</code></pre>
         <p>Connects MCP servers and syncs their tools into the agent's function list. <code>mcp("name").config(...)</code> uses the standard MCP config JSON format.</p>
 <pre><code>mcp("name")</code></pre>
         <table>
-          <tr><th>Function</th><th>Description</th></tr>
+          <tr><th>Sub-function</th><th>Description</th></tr>
           <tr><td><code>.config("path/or/url")</code></td><td>Local JSON config file path, or URL to a remote config.</td></tr>
           <tr><td><code>.token("ENV_VAR")</code></td><td>Chainable. Adds auth tokens: first token becomes <code>Authorization: Bearer</code> (HTTP) or <code>TOKEN</code> env (STDIO); extras become <code>X-Token-2</code> (HTTP) / <code>TOKEN_2</code> (STDIO).</td></tr>
         </table>
@@ -450,13 +460,18 @@ mcp("secure-api")
         <p>Verify the subagent name matches a <code>subagent("Name")</code> declaration exactly.</p>
 
         <h2 id="complete-example">Complete Example</h2>
-<pre><code>import('reusable_tasks.gneol')
-
-program("Dispatch Test")
-  .model("deepseek-v4-flash")
+<pre><code>program("Dispatch Test")
+  .model("deepseek-v4-flash") // ensure a model("deepseek-v4-flash") block exists or the tag is cached
   .env(".env")
   .context("Policy").text("Never share internal keys.")
   .context("FAQ").resource("./docs/faq.md")
+
+model("deepseek-v4-flash")
+  .provider("openrouter")
+  .modelId("deepseek/deepseek-chat")
+  .apiKey("DEEPSEEK_API_KEY")
+  .temperature(0.7)
+  .maxTokens(4000)
 
 model("eagle-eye")
   .provider("openrouter")

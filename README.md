@@ -26,11 +26,12 @@ Download from the [Releases](https://github.com/Gneol/Gneol/releases) page.
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-2. [Architecture](#architecture)
-3. [Path Resolution](#path-resolution)
-4. [Installation & Deployment](#installation--deployment)
-5. [Directives](#directives)
+1. [Installation](#installation)
+2. [Getting Started](#getting-started)
+3. [Architecture](#architecture)
+4. [Path Resolution](#path-resolution)
+5. [Installation & Deployment](#installation--deployment)
+6. [Directives](#directives)
    - [program()](#1-program)
    - [model()](#2-model)
    - [subagent()](#3-subagent)
@@ -40,8 +41,9 @@ Download from the [Releases](https://github.com/Gneol/Gneol/releases) page.
    - [on() — Event-Based Triggers](#7-on--event-based-triggers)
    - [tool() — Custom Tool Scripts](#8-tool--custom-tool-scripts)
    - [mcp() — MCP Server Declarations](#9-mcp--mcp-server-declarations)
-6. [Built-in Events](#built-in-events)
-7. [Troubleshooting](#troubleshooting)
+7. [Built-in Events](#built-in-events)
+8. [Troubleshooting](#troubleshooting)
+9. [Complete Example](#complete-example)
 
 ---
 
@@ -57,7 +59,14 @@ program("Hello World")
 Save it as `hello.gneol`, then deploy:
 
 ```bash
-gneol-cli deploy -f hello.gneol
+gneol deploy -f hello.gneol
+```
+
+Then talk to your agent:
+
+```bash
+gneol        # start an interactive session in the current directory
+gneol -a     # list and select an existing agent, then start chatting
 ```
 
 That creates an agent named after your program title. Agents are the workers of Gneol: they receive messages, call functions, and execute triggers. From here you can add models, subagents, triggers, tools, and MCP servers as described below.
@@ -100,8 +109,8 @@ Absolute paths and URLs are used as-is.
 Programs are deployed with the Gneol CLI. Start the server first if it isn't already running:
 
 ```bash
-gneol-cli start          # start the server (--daemonize to run in background)
-gneol-cli deploy -f path/to/file.gneol
+gneol start          # start the server (--daemonize to run in background)
+gneol deploy -f path/to/file.gneol
 ```
 
 `deploy` reconciles server state with your `.gneol` script:
@@ -119,18 +128,20 @@ gneol-cli deploy -f path/to/file.gneol
 
 | Command | Purpose |
 |---------|---------|
-| `gneol-cli agent` | List and select an existing agent. |
-| `gneol-cli model` | Manage models. |
-| `gneol-cli mcp` | Manage MCP servers. |
-| `gneol-cli tool` | Manage tools. |
-| `gneol-cli event` | Manage events. |
-| `gneol-cli schedule` | Manage scheduled triggers. |
-| `gneol-cli secrets set <key> <value>` | Store an API key securely. |
-| `gneol-cli convert` | Convert `.gneol` to/from JSON or YAML. |
-| `gneol-cli rollback [target]` | Rollback a previous deployment or resource change. |
-| `gneol-cli stop` | Stop the server. |
+| `gneol agent list` | List agents on the server. |
+| `gneol agent scaffold <name>` | Generate an agent scaffold as a `.gneol` snippet. |
+| `gneol model list` | List models on the server. |
+| `gneol mcp list` | List MCP servers. |
+| `gneol tool list` | List tools. |
+| `gneol event list` | List events. |
+| `gneol schedule list` | List scheduled triggers. |
+| `gneol secrets <action> [key] [value]` | Manage encrypted API key store (`list`, `get`, `set`, `delete`). |
+| `gneol convert` | Convert `.gneol` to/from JSON or YAML. |
+| `gneol rollback [target]` | Rollback a previous deployment or resource change. |
+| `gneol stop` | Stop the server. |
+| `gneol -a` | List and select an existing agent, then start chatting. |
 
-Run `gneol-cli --help` for the full command list.
+Run `gneol --help` for the full command list.
 
 ---
 
@@ -138,7 +149,7 @@ Run `gneol-cli --help` for the full command list.
 
 ### 1. program()
 
-The program header. Every `.gneol` file must start with exactly one `program()` directive.
+The program header. Every `.gneol` file must contain exactly one `program()` directive. `import()` directives may appear before it; all other directives must come after.
 
 ```
 program("Title")
@@ -183,6 +194,13 @@ model("tag")
 > **Validation:** `provider` and `apiKey` must always be paired.
 
 ```
+model("deepseek-v4-flash")
+  .provider("openrouter")
+  .modelId("deepseek/deepseek-chat")
+  .apiKey("DEEPSEEK_API_KEY")
+  .temperature(0.7)
+  .maxTokens(4000)
+
 model("eagle-eye")
   .provider("openrouter")
   .modelId("openai/gpt-4o")
@@ -331,7 +349,7 @@ on("eventName")
 | Function | Description |
 |----------|-------------|
 | `.maxSize(N)` | Max pending jobs before auto-fire (fires once threshold reached). |
-| `.delay(Ns)` | Debounce window in seconds (coalesces rapid events). |
+| `.delay(N)` | Debounce window in seconds (coalesces rapid events). |
 | `.do("message")` | Action message. Chainable: `.do("a").do("b")`. |
 | `.resource("path")` | Attach file/URL context. |
 | `.if("condition text")` | LLM-evaluated condition. |
@@ -363,28 +381,7 @@ tool("name")
 | `.script("path")` | Path to the worker script (relative or absolute). |
 | `.description("text")` | Human-readable description of the module. |
 
-**Worker script requirements:**
-
-- Import `{ Module }` from `gneol-sdk` (npm) and `{ z }` from `zod`.
-- Instantiate `new Module("Name")`.
-- Register tools via `.tool({...})` — `parameters` and `output` must be Zod schemas, not strings.
-- Call `.parse()` to start the worker.
-
-```js
-import { Module } from "gneol-sdk";
-import { z } from "zod";
-
-const mod = new Module("MyTool");
-mod.tool({
-    name: "myFunc",
-    description: "Does something useful",
-    parameters: z.object({ input: z.string() }),
-    output: z.object({ result: z.string() }),
-    func: async (args) => { /* runs when called */ },
-    action: async (args) => { /* runs for action logs */ },
-});
-mod.parse();
-```
+Worker scripts are written with the Gneol SDK (`gneol-sdk`, npm). See the SDK documentation for how to define tools.
 
 After install, tools are available as `tool.<ModuleName>.<toolName>()`. Action logs from `action()` are forwarded to the session stream.
 
@@ -466,13 +463,18 @@ mcp("secure-api")
 ## Complete Example
 
 ```
-import('reusable_tasks.gneol')
-
 program("Dispatch Test")
   .model("deepseek-v4-flash")
   .env(".env")
   .context("Policy").text("Never share internal keys.")
   .context("FAQ").resource("./docs/faq.md")
+
+model("deepseek-v4-flash")
+  .provider("openrouter")
+  .modelId("deepseek/deepseek-chat")
+  .apiKey("DEEPSEEK_API_KEY")
+  .temperature(0.7)
+  .maxTokens(4000)
 
 model("eagle-eye")
   .provider("openrouter")
