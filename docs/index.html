@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GNEOL Program Format Reference — Gneol Docs</title>
+    <meta name="description" content="Complete reference for writing .gneol programs: program headers, models, subagents, triggers, tools, and MCP servers." />
+    <style>
+      :root {
+        --bg: #0b0b0f;
+        --bg-elev: #12121a;
+        --border: #1f1f2e;
+        --text: #e4e4e7;
+        --text-dim: #8f8fa3;
+        --accent: #6c5ce7;
+        --accent-2: #00d9f5;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+      }
+      code, pre {
+        font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        background: rgba(11,11,15,0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .topbar a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-right: 16px;
+      }
+      .topbar a:hover, .topbar a.logo:hover { color: var(--text); }
+      .topbar a.logo { color: var(--text); font-weight: 700; }
+      .layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .sidebar {
+        position: sticky;
+        top: 57px;
+        height: calc(100vh - 57px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        padding: 24px 16px;
+        font-size: 0.85rem;
+      }
+      .sidebar a {
+        display: block;
+        color: var(--text-dim);
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+      }
+      .sidebar a:hover {
+        color: var(--text);
+        background: var(--bg-elev);
+      }
+      .content {
+        padding: 40px 48px 80px;
+        max-width: 780px;
+      }
+      h1 { font-size: 2rem; margin-bottom: 8px; }
+      h2 {
+        font-size: 1.35rem;
+        margin: 48px 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      h3 { font-size: 1.05rem; margin: 28px 0 10px; }
+      h4 { margin: 20px 0 8px; }
+      p { margin: 10px 0; color: var(--text-dim); }
+      ul, ol { margin: 10px 0 10px 24px; color: var(--text-dim); }
+      li { margin: 4px 0; }
+      code {
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        padding: 1px 6px;
+        border-radius: 5px;
+        font-size: 0.85em;
+        color: var(--accent-2);
+      }
+      pre {
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 0.82rem;
+      }
+      pre code { background: none; border: none; padding: 0; color: #9fe8a8; }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 12px 0;
+        font-size: 0.85rem;
+      }
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        text-align: left;
+        color: var(--text-dim);
+      }
+      th { background: var(--bg-elev); color: var(--text); }
+      .note {
+        background: rgba(108,92,231,0.08);
+        border-left: 3px solid var(--accent);
+        padding: 10px 14px;
+        border-radius: 0 6px 6px 0;
+        margin: 12px 0;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+      }
+      .note strong { color: var(--text); }
+      @media (max-width: 820px) {
+        .layout { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+        .content { padding: 24px 20px 60px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <a href="../" class="logo">⬡ Gneol</a>
+      <a href="#getting-started">Docs</a>
+      <a href="https://github.com/Gneol/Gneol" target="_blank" rel="noopener">GitHub</a>
+    </div>
+
+    <div class="layout">
+      <nav class="sidebar">
+        <strong>Contents</strong>
+        <br /><br />
+        <a href="#getting-started">1. Getting Started</a>
+        <a href="#architecture">2. Architecture</a>
+        <a href="#path-resolution">3. Path Resolution</a>
+        <a href="#installation-deployment">4. Installation &amp; Deployment</a>
+        <a href="#directives">5. Directives</a>
+        <a href="#program">program()</a>
+        <a href="#model">model()</a>
+        <a href="#subagent">subagent()</a>
+        <a href="#summarization">summarization()</a>
+        <a href="#import">import()</a>
+        <a href="#at">at() — Time Triggers</a>
+        <a href="#on">on() — Event Triggers</a>
+        <a href="#tool">tool() — Custom Tools</a>
+        <a href="#mcp">mcp() — MCP Servers</a>
+        <a href="#built-in-events">6. Built-in Events</a>
+        <a href="#troubleshooting">7. Troubleshooting</a>
+        <a href="#complete-example">8. Complete Example</a>
+      </nav>
+
+      <main class="content">
+        <h1>GNEOL Program Format Reference</h1>
+        <p>A <code>.gneol</code> file defines a program for the Gneol platform. This document covers everything you need to write, deploy, and understand <code>.gneol</code> programs.</p>
+
+        <h2 id="getting-started">Getting Started</h2>
+        <p>A minimal <code>.gneol</code> program is just a header:</p>
+<pre><code>program("Hello World")
+  .model("fast-llm")</code></pre>
+        <p>Save it as <code>hello.gneol</code>, then deploy:</p>
+<pre><code>gneol-cli deploy -f hello.gneol</code></pre>
+        <p>That creates an agent named after your program title. Agents are the workers of Gneol: they receive messages, call functions, and execute triggers. From here you can add models, subagents, triggers, tools, and MCP servers as described below.</p>
+
+        <h2 id="architecture">Architecture</h2>
+        <p>Gneol programs describe a system of cooperating agents:</p>
+        <ul>
+          <li><strong>Program</strong> — a <code>.gneol</code> file. Defines models, subagents, triggers, tools, and MCP connections.</li>
+          <li><strong>Agent</strong> — a worker spawned from the program header. Each agent has a name, traits, backstory, workspace, and a model.</li>
+          <li><strong>Subagent</strong> — a specialized child agent declared with <code>subagent("Name")</code>. Useful for delegating focused tasks (CI monitoring, UI debugging, etc.).</li>
+          <li><strong>Trigger</strong> — <code>at()</code> (time-based) or <code>on()</code> (event-based) blocks that fire actions automatically.</li>
+          <li><strong>Tool</strong> — a function an agent can call. Built-ins come from the platform; custom ones come from <code>tool()</code> scripts or MCP servers.</li>
+          <li><strong>MCP Server</strong> — an external Model Context Protocol server whose tools become callable by agents.</li>
+        </ul>
+        <p>A deployed program creates a root agent. It can dispatch work to its subagents (e.g., via trigger routing with <code>.sentinel("Name")</code>).</p>
+
+        <h2 id="path-resolution">Path Resolution</h2>
+        <p><strong>All relative paths in a <code>.gneol</code> file resolve relative to the directory containing that <code>.gneol</code> file</strong> — not the process CWD and not the agent workspace.</p>
+        <p>This applies to:</p>
+        <ul>
+          <li><code>.context("Label").resource("path")</code></li>
+          <li><code>import("path")</code></li>
+          <li><code>.script("path")</code> in <code>tool()</code></li>
+          <li><code>.config("path")</code> in <code>mcp()</code></li>
+          <li><code>.ifExec("path", ...)</code> in <code>at()</code>/<code>on()</code></li>
+        </ul>
+        <p>Absolute paths and URLs are used as-is.</p>
+
+        <h2 id="installation-deployment">Installation &amp; Deployment</h2>
+        <p>Programs are deployed with the Gneol CLI. Start the server first if it isn't already running:</p>
+<pre><code>gneol-cli start          # start the server (--daemonize to run in background)
+gneol-cli deploy -f path/to/file.gneol</code></pre>
+        <p><code>deploy</code> reconciles server state with your <code>.gneol</code> script:</p>
+        <ol>
+          <li>Parses the <code>.gneol</code> file and its <code>import()</code>s.</li>
+          <li>Creates/updates the root agent for the program.</li>
+          <li>Applies model bindings, subagent declarations, and triggers.</li>
+          <li>Loads custom <code>tool()</code> scripts.</li>
+          <li>Connects <code>mcp()</code> servers and syncs their tools.</li>
+          <li>Rebuilds the agent's function list so new tools are immediately available.</li>
+        </ol>
+        <div class="note"><strong>Note:</strong> some sync steps (e.g., MCP connections) require a server restart to take full effect.</div>
+        <h3>Other useful commands</h3>
+        <table>
+          <tr><th>Command</th><th>Purpose</th></tr>
+          <tr><td><code>gneol-cli agent</code></td><td>List and select an existing agent.</td></tr>
+          <tr><td><code>gneol-cli model</code></td><td>Manage models.</td></tr>
+          <tr><td><code>gneol-cli mcp</code></td><td>Manage MCP servers.</td></tr>
+          <tr><td><code>gneol-cli tool</code></td><td>Manage tools.</td></tr>
+          <tr><td><code>gneol-cli event</code></td><td>Manage events.</td></tr>
+          <tr><td><code>gneol-cli schedule</code></td><td>Manage scheduled triggers.</td></tr>
+          <tr><td><code>gneol-cli secrets set &lt;key&gt; &lt;value&gt;</code></td><td>Store an API key securely.</td></tr>
+          <tr><td><code>gneol-cli convert</code></td><td>Convert <code>.gneol</code> to/from JSON or YAML.</td></tr>
+          <tr><td><code>gneol-cli rollback [target]</code></td><td>Rollback a previous deployment or resource change.</td></tr>
+          <tr><td><code>gneol-cli stop</code></td><td>Stop the server.</td></tr>
+        </table>
+        <p>Run <code>gneol-cli --help</code> for the full command list.</p>
+
+        <h2 id="directives">Directives</h2>
+
+        <h3 id="program">1. program()</h3>
+        <p>The program header. Every <code>.gneol</code> file must start with exactly one <code>program()</code> directive.</p>
+<pre><code>program("Title")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.model("tag")</code></td><td>Assigns the parent agent's model tag.</td></tr>
+          <tr><td><code>.use("agentId")</code></td><td>Binds the program to a specific existing agent. Usually auto-injected on install.</td></tr>
+          <tr><td><code>.env("path")</code></td><td>Specifies an env file path (default: auto-detect).</td></tr>
+          <tr><td><code>.context("Label").text("static text")</code></td><td>Injects static context into the system message.</td></tr>
+          <tr><td><code>.context("Label").resource("path/or/url")</code></td><td>Loads file/URL content into the system message.</td></tr>
+          <tr><td><code>.id("agentId")</code></td><td>Explicitly sets the agent ID. Unless you know what you're doing, let it be auto-injected.</td></tr>
+        </table>
+<pre><code>program("My App")
+  .model("fast-llm")
+  .env(".env")
+  .context("Policy").text("Never share internal keys.")
+  .context("FAQ").resource("./docs/faq.md")</code></pre>
+
+        <h3 id="model">2. model()</h3>
+        <p>Declares a model binding for a tag used by agents, subagents, or summarization.</p>
+<pre><code>model("tag")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.provider("name")</code></td><td>The provider name (e.g., <code>openrouter</code>). Required if <code>.apiKey()</code> is set.</td></tr>
+          <tr><td><code>.modelId("id")</code></td><td>The model identifier (e.g., <code>openai/gpt-4o</code>).</td></tr>
+          <tr><td><code>.apiKey("ENV_VAR")</code></td><td>Env variable name holding the API key.</td></tr>
+          <tr><td><code>.temperature(0.7)</code></td><td>0.0 to 1.0.</td></tr>
+          <tr><td><code>.maxTokens(4000)</code></td><td>Max output tokens.</td></tr>
+          <tr><td><code>.rateLimit(10)</code></td><td>Requests per minute.</td></tr>
+        </table>
+        <div class="note"><strong>Validation:</strong> <code>provider</code> and <code>apiKey</code> must always be paired.</div>
+<pre><code>model("eagle-eye")
+  .provider("openrouter")
+  .modelId("openai/gpt-4o")
+  .apiKey("OPENROUTER_API_KEY")
+  .temperature(0.2)
+  .maxTokens(4000)</code></pre>
+
+        <h3 id="subagent">3. subagent()</h3>
+        <p>Declares a specialized child agent. (The older <code>sentinel()</code> keyword is deprecated — use <code>subagent()</code>.)</p>
+<pre><code>subagent("Name")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.model("tag")</code></td><td>Assigns a model tag (empty name = wildcard for all).</td></tr>
+          <tr><td><code>.id("agent_id")</code></td><td>Assigns an immutable identifier (used for lookups on re-parse).</td></tr>
+          <tr><td><code>.description("text")</code></td><td>Sets the subagent's specialty/description (updates on re-parse).</td></tr>
+          <tr><td><code>.backstory("text")</code></td><td>Sets the subagent's persona/instructions.</td></tr>
+        </table>
+        <p>All sub-functions are optional per subagent.</p>
+<pre><code>subagent("Marcus")
+  .model("eagle-eye")
+  .description("CI monitoring specialist")
+  .backstory("You are a CI sentinel. Watch pipelines and report failures.")</code></pre>
+        <p>A wildcard declaration applies its model to all subagents that don't declare one:</p>
+<pre><code>subagent().model("deepseek-v4-flash")</code></pre>
+
+        <h3 id="summarization">4. summarization()</h3>
+        <p>Configures how conversations are summarized for the program's agents.</p>
+<pre><code>summarization()</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.model("tag")</code></td><td>Model tag to use for summarization.</td></tr>
+          <tr><td><code>.prompt("...")</code></td><td>Summarization prompt (inline text, file path, or URL).</td></tr>
+        </table>
+<pre><code>summarization()
+  .model("fast-llm")
+  .prompt("tl;dr in 3 bullets")</code></pre>
+
+        <h3 id="import">5. import()</h3>
+        <p>Recursively resolves another <code>.gneol</code> file and inlines its contents. Imported files should be <strong>fragments</strong>: they may contain any directive except another <code>program()</code> header (headers and sub-directives are stripped on import). Circular imports are detected and skipped. Imports can appear anywhere in the file.</p>
+<pre><code>import("common.gneol")</code></pre>
+<pre><code>// common.gneol — a fragment with shared declarations
+model("shared-model")
+  .provider("openai")
+  .modelId("gpt-4o-mini")
+  .apiKey("OPENAI_API_KEY")</code></pre>
+
+        <h3 id="at">6. at() — Time-Based Triggers</h3>
+        <p>Schedules an action to run at specific times or intervals.</p>
+<pre><code>at("timeExpr")</code></pre>
+        <h4>Supported Time Expressions</h4>
+        <table>
+          <tr><th>Expression</th><th>Meaning</th></tr>
+          <tr><td><code>+10s</code> / <code>+5min</code> / <code>+2h</code> / <code>+1d</code></td><td>Relative from deployment time.</td></tr>
+          <tr><td><code>9am</code> / <code>3pm</code> / <code>9:40am</code></td><td>Absolute 12-hour (agent's local timezone).</td></tr>
+          <tr><td><code>14:30</code> / <code>18:00</code></td><td>Absolute 24-hour (agent's local timezone).</td></tr>
+          <tr><td><code>every:30mins</code> / <code>every:1h</code></td><td>Recurring interval.</td></tr>
+          <tr><td><code>every:Mon</code> / <code>every:Tuesday</code></td><td>Day of week.</td></tr>
+          <tr><td><code>every:1st</code> / <code>every:15th</code></td><td>Day of month.</td></tr>
+        </table>
+        <p>Fires are executed while the server is running; a missed fire while the server is down is not retroactively queued.</p>
+        <h4>Sub-functions</h4>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.max(N)</code></td><td>Max triggers before auto-stop.</td></tr>
+          <tr><td><code>.do("message")</code></td><td>Action message sent to the agent (or routed subagent). Chainable: <code>.do("a").do("b")</code>.</td></tr>
+          <tr><td><code>.resource("path")</code></td><td>Attach file/URL context to the action.</td></tr>
+          <tr><td><code>.if("condition text")</code></td><td>LLM-evaluated condition; action only runs if true.</td></tr>
+          <tr><td><code>.ifExec("script", "operator", "expected")</code></td><td>Runs a shell script and compares stdout to expected. Operators: <code>eq</code> (default), <code>lt</code>, <code>gt</code>, <code>contains</code>. Two-arg form uses <code>eq</code>.</td></tr>
+          <tr><td><code>.sentinel("name")</code></td><td>Route the action to a subagent (deprecated alias).</td></tr>
+          <tr><td><code>.modify()</code></td><td>Tag for review.</td></tr>
+        </table>
+<pre><code>at("every:10min")
+  .if("Backend health endpoint is reachable")
+  .do("Run health probe")
+  .max(1)</code></pre>
+<pre><code>at("every:5min")
+  .ifExec("./scripts/health.sh", "ok")
+  .do("Health check passed.")
+  .max(3)</code></pre>
+<pre><code>at("every:1min")
+  .ifExec("./scripts/cpu.sh", "gt", "80")
+  .do("CPU threshold exceeded.")
+  .max(5)</code></pre>
+
+        <h3 id="on">7. on() — Event-Based Triggers</h3>
+        <p>Fires when an event is received. Events are pushed to the agent via the platform; see <a href="#built-in-events">Built-in Events</a>.</p>
+<pre><code>on("eventName")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.maxSize(N)</code></td><td>Max pending jobs before auto-fire (fires once threshold reached).</td></tr>
+          <tr><td><code>.delay(Ns)</code></td><td>Debounce window in seconds (coalesces rapid events).</td></tr>
+          <tr><td><code>.do("message")</code></td><td>Action message. Chainable: <code>.do("a").do("b")</code>.</td></tr>
+          <tr><td><code>.resource("path")</code></td><td>Attach file/URL context.</td></tr>
+          <tr><td><code>.if("condition text")</code></td><td>LLM-evaluated condition.</td></tr>
+          <tr><td><code>.sentinel("name")</code></td><td>Route to a subagent (deprecated alias).</td></tr>
+          <tr><td><code>.modify()</code></td><td>Tag for review.</td></tr>
+          <tr><td><code>.max(N)</code></td><td>Max triggers before auto-stop (global limit).</td></tr>
+        </table>
+<pre><code>on("deploy-event")
+  .maxSize(1)
+  .delay(10)
+  .if("Latest CI passed")
+  .do("Run deployment.")
+  .sentinel("Marcus")</code></pre>
+
+        <h3 id="tool">8. tool() — Custom Tool Scripts</h3>
+        <p>Declares a custom tool module from a worker script.</p>
+<pre><code>tool("name")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.script("path")</code></td><td>Path to the worker script (relative or absolute).</td></tr>
+          <tr><td><code>.description("text")</code></td><td>Human-readable description of the module.</td></tr>
+        </table>
+        <p><strong>Worker script requirements:</strong></p>
+        <ul>
+          <li>Import <code>{ Module }</code> from <code>gneol-sdk</code> (npm) and <code>{ z }</code> from <code>zod</code>.</li>
+          <li>Instantiate <code>new Module("Name")</code>.</li>
+          <li>Register tools via <code>.tool({...})</code> — <code>parameters</code> and <code>output</code> must be Zod schemas, not strings.</li>
+          <li>Call <code>.parse()</code> to start the worker.</li>
+        </ul>
+<pre><code>import { Module } from "gneol-sdk";
+import { z } from "zod";
+
+const mod = new Module("MyTool");
+mod.tool({
+    name: "myFunc",
+    description: "Does something useful",
+    parameters: z.object({ input: z.string() }),
+    output: z.object({ result: z.string() }),
+    func: async (args) => { /* runs when called */ },
+    action: async (args) => { /* runs for action logs */ },
+});
+mod.parse();</code></pre>
+        <p>After install, tools are available as <code>tool.&lt;ModuleName&gt;.&lt;toolName&gt;()</code>. Action logs from <code>action()</code> are forwarded to the session stream.</p>
+<pre><code>tool("CustomTool")
+  .script("./custom_tool.js")</code></pre>
+
+        <h3 id="mcp">9. mcp() — MCP Server Declarations</h3>
+        <p>Connects MCP servers and syncs their tools into the agent's function list. <code>mcp("name").config(...)</code> uses the standard MCP config JSON format.</p>
+<pre><code>mcp("name")</code></pre>
+        <table>
+          <tr><th>Function</th><th>Description</th></tr>
+          <tr><td><code>.config("path/or/url")</code></td><td>Local JSON config file path, or URL to a remote config.</td></tr>
+          <tr><td><code>.token("ENV_VAR")</code></td><td>Chainable. Adds auth tokens: first token becomes <code>Authorization: Bearer</code> (HTTP) or <code>TOKEN</code> env (STDIO); extras become <code>X-Token-2</code> (HTTP) / <code>TOKEN_2</code> (STDIO).</td></tr>
+        </table>
+        <p><strong>Config format:</strong></p>
+<pre><code>{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+    },
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp"
+    }
+  }
+}</code></pre>
+        <p>Supports <code>stdio</code> (<code>command</code>/<code>args</code>) and HTTP Streamable (<code>url</code>) transports. Optional <code>env</code>/<code>headers</code> fields are supported; <code>${VAR}</code> placeholders are expanded from the environment.</p>
+<pre><code>mcp("test-servers")
+  .config("mcp-servers.json")
+
+mcp("secure-api")
+  .config("mcp-remote.json")
+  .token("MY_API_TOKEN")</code></pre>
+
+        <h2 id="built-in-events">Built-in Events</h2>
+        <table>
+          <tr><th>Event</th><th>Fired when</th></tr>
+          <tr><td><code>Idle</code></td><td>The agent is idle (no pending work). Often used for keep-alive checks.</td></tr>
+          <tr><td><code>deploy-event</code></td><td>A program is deployed/redeployed (useful for CI-triggered deployments).</td></tr>
+          <tr><td><code>message</code></td><td>A user or agent message arrives.</td></tr>
+        </table>
+        <p>Custom application events can be emitted by tools/scripts; <code>on("name")</code> listens for any event pushed to the agent.</p>
+
+        <h2 id="troubleshooting">Troubleshooting</h2>
+        <h4>Deploy fails with "missing model binding"</h4>
+        <p>Every <code>.model("tag")</code> reference in the header/subagents must have a matching <code>model("tag")</code> block, or the tag must already be cached.</p>
+        <h4>MCP tools not appearing</h4>
+        <p>Ensure <code>mcp()</code> config paths are correct, then restart the server after deploy; HTTP servers may require network access. Tools appear prefixed with the declared MCP name: <code>mcp.&lt;name&gt;.&lt;toolName&gt;</code> (e.g., <code>mcp.test-servers.&lt;toolName&gt;</code>).</p>
+        <h4>Trigger never fires</h4>
+        <p>Check the <code>at()</code> / <code>on()</code> conditions. LLM-evaluated <code>.if()</code> can fail silently; try removing it to isolate.</p>
+        <h4><code>ifExec</code> not matching</h4>
+        <p>Confirm the script is executable and its stdout exactly matches (or use <code>contains</code>). Paths resolve relative to the <code>.gneol</code> file.</p>
+        <h4>Subagent not receiving routed actions</h4>
+        <p>Verify the subagent name matches a <code>subagent("Name")</code> declaration exactly.</p>
+
+        <h2 id="complete-example">Complete Example</h2>
+<pre><code>import('reusable_tasks.gneol')
+
+program("Dispatch Test")
+  .model("deepseek-v4-flash")
+  .env(".env")
+  .context("Policy").text("Never share internal keys.")
+  .context("FAQ").resource("./docs/faq.md")
+
+model("eagle-eye")
+  .provider("openrouter")
+  .modelId("openai/gpt-4o")
+  .apiKey("OPENROUTER_API_KEY")
+  .temperature(0.2)
+  .maxTokens(4000)
+
+subagent("Marcus")
+  .model("eagle-eye")
+  .description("CI sentinel")
+
+subagent().model("deepseek-v4-flash")
+
+summarization().model("deepseek-v4-flash").prompt("tl;dr in 3 bullets")
+
+tool("CustomTool")
+  .script("./custom_tool.js")
+
+mcp("test-servers")
+  .config("mcp-servers.json")
+
+at("every:10min")
+  .if("Context feature is fully working")
+  .do("Log: Context feature is done.")
+  .max(1)
+
+on("deploy-event")
+  .maxSize(1)
+  .if("Latest CI passed")
+  .do("Run deployment.")
+
+at("every:5min")
+  .ifExec("./scripts/health.sh", "ok")
+  .do("Health check passed.")
+  .max(3)
+
+at("every:1min")
+  .ifExec("./scripts/cpu.sh", "gt", "80")
+  .do("CPU threshold exceeded.")
+  .max(5)</code></pre>
+      </main>
+    </div>
+  </body>
+</html>

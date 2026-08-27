@@ -56,8 +56,8 @@ curl -fsSL "$URL" -o "$TMPFILE"
 echo "📂 Extracting to ${INSTALL_DIR}..."
 tar -xzf "$TMPFILE" -C "$INSTALL_DIR"
 
-# Make binaries executable
-chmod +x "$INSTALL_DIR/gneol" "$INSTALL_DIR/gneol-brain" 2>/dev/null || true
+# Make the binary executable
+chmod +x "$INSTALL_DIR/gneol" 2>/dev/null || true
 
 # Ensure ~/.local/bin is in PATH for current and future sessions
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
@@ -71,6 +71,6 @@ rm -f "$TMPFILE"
 
 echo "✅ Gneol installed successfully!"
 echo "   You may need to restart your terminal or run: source ~/.bashrc"
-echo "   Starting Gneol server..."
-"$INSTALL_DIR/gneol" server start
+echo "   Starting Gneol..."
+"$INSTALL_DIR/gneol" start
 

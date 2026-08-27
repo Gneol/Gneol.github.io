@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Gneol Installer
-# Downloads the correct platform archive (tar.gz) containing CLI, brain, and Prisma engine
+# Downloads the correct platform archive (tar.gz) containing the single Gneol binary (CLI + LLM + terminal)
 
 set -e
 
@@ -102,7 +102,6 @@ tar -xzf "$TMP_ARCHIVE" -C "$INSTALL_DIR"
 
 # Set permissions
 chmod +x "$INSTALL_DIR/gneol"
-chmod +x "$INSTALL_DIR/gneol-brain"
 
 # Clean up
 rm -f "$TMP_ARCHIVE"
@@ -110,10 +109,8 @@ rm -f "$TMP_ARCHIVE"
 echo ""
 echo "✅ Gneol installed!"
 echo "   gneol              → $INSTALL_DIR/gneol"
-echo "   gneol-brain         → $INSTALL_DIR/gneol-brain"
-echo "   Prisma engine      → $INSTALL_DIR/*.dylib.node or *.so.node"
 echo ""
-echo "Starting Gneol server..."
-"$INSTALL_DIR/gneol" server start
+echo "Starting Gneol..."
+"$INSTALL_DIR/gneol" start
 
 echo "Run 'gneol --help' to get started."
