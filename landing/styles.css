@@ -177,8 +177,8 @@ code, pre {
   border-color: var(--accent-2);
   border-width: 3px;
   padding: 26px;
-  transform: translateY(-2px);
 }
+
 
 .feature-card h3 {
   font-size: 1.05rem;
