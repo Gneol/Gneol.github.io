@@ -15,8 +15,8 @@
       <div class="nav-inner">
         <a href="#" class="logo">⬡ Gneol</a>
         <div class="nav-links">
-          <a href="#features">Features</a>
           <a href="#install">Install</a>
+          <a href="#features">Features</a>
           <a href="docs/">Docs</a>
           <a
             href="https://github.com/Gneol/Gneol"
@@ -45,6 +45,52 @@
         <pre class="hero-code"><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash</code></pre>
       </div>
     </header>
+
+    <section id="install" class="install">
+      <div class="section-inner">
+        <h2 class="section-title">Get started in seconds</h2>
+        <p class="section-sub">
+          Install the single binary, then deploy your first agent from a
+          <code>.gneol</code> file — no server, no database.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <p>Run the install command</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <p>Write a <code>hello.gneol</code> program</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <p>
+              Deploy &amp; chat: <code>gneol deploy -f hello.gneol</code>
+            </p>
+          </div>
+        </div>
+        <div class="install-block">
+          <div class="install-tabs">
+            <button class="tab active" data-tab="quick">Quick install</button>
+            <button class="tab" data-tab="version">Specific version</button>
+            <button class="tab" data-tab="manual">Manual</button>
+          </div>
+          <div class="install-panel active" id="panel-quick">
+            <pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash</code></pre>
+          </div>
+          <div class="install-panel" id="panel-version">
+            <pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash -s -- --version v0.2.5</code></pre>
+          </div>
+          <div class="install-panel" id="panel-manual">
+            <pre><code># Download from GitHub Releases:
+#   https://github.com/Gneol/Gneol/releases
+#
+# macOS (arm64)   → gneol-darwin-arm64.tar.gz
+# Linux (x64)     → gneol-linux-x64.tar.gz</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section id="features" class="features">
       <div class="section-inner">
@@ -91,32 +137,6 @@
               Precompiled binaries for macOS arm64 and Linux x64. One install
               command gets you going.
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="install" class="install">
-      <div class="section-inner">
-        <h2 class="section-title">Get started in seconds</h2>
-        <div class="install-block">
-          <div class="install-tabs">
-            <button class="tab active" data-tab="quick">Quick install</button>
-            <button class="tab" data-tab="version">Specific version</button>
-            <button class="tab" data-tab="manual">Manual</button>
-          </div>
-          <div class="install-panel active" id="panel-quick">
-            <pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash</code></pre>
-          </div>
-          <div class="install-panel" id="panel-version">
-            <pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash -s -- --version v0.2.5</code></pre>
-          </div>
-          <div class="install-panel" id="panel-manual">
-            <pre><code># Download from GitHub Releases:
-#   https://github.com/Gneol/Gneol/releases
-#
-# macOS (arm64)   → gneol-darwin-arm64.tar.gz
-# Linux (x64)     → gneol-linux-x64.tar.gz</code></pre>
           </div>
         </div>
       </div>
