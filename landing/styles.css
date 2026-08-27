@@ -169,19 +169,15 @@ code, pre {
 .feature-card {
   background: var(--bg-elev);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 28px;
-  transition: border-color 0.15s, transform 0.15s;
+  transition: border-color 0.15s, border-width 0.15s, transform 0.15s;
 }
 
 .feature-card:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-2);
+  border-width: 3px;
+  padding: 26px;
   transform: translateY(-2px);
-}
-
-.feature-icon {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
 }
 
 .feature-card h3 {
