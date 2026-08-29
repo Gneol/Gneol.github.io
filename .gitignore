@@ -6,6 +6,7 @@ save.json
 check.txt
 fix.txt
 car_render.png
+*.bak
 error.txt
 *.tar.gz
 release.sh
