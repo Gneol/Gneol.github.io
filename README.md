@@ -72,6 +72,58 @@ at("every:10min")
 
 ---
 
+## Environment Variables
+
+There are three ways to provide environment variables / secrets to your programs:
+
+### 1. Global secret store (`gneol secrets`)
+
+Store API keys and tokens globally, encrypted on your machine:
+
+```bash
+gneol secrets set OPENROUTER_API_KEY sk-...
+gneol secrets list
+gneol secrets get OPENROUTER_API_KEY
+gneol secrets delete OPENROUTER_API_KEY
+```
+
+Then reference the key by name in your `.gneol` file — no hard-coded values:
+
+```
+model("fast-llm")
+  .provider("openrouter")
+  .modelId("openai/gpt-4o-mini")
+  .apiKey("OPENROUTER_API_KEY")
+```
+
+### 2. Per-program env file
+
+Point your program at a `.env` file on disk. All variables in that file are injected into the program's environment:
+
+```
+program("My App")
+  .env(".env")
+```
+
+```bash
+# .env
+OPENROUTER_API_KEY=sk-...
+MY_CUSTOM_VAR=hello
+```
+
+If no path is given, Gneol auto-detects a `.env` file in the current directory.
+
+### 3. Shell environment (global)
+
+Export variables in your shell before running Gneol — they're available to every program:
+
+```bash
+export OPENROUTER_API_KEY=sk-...
+gneol deploy -f hello.gneol
+```
+
+---
+
 ## Documentation & Support
 
 - **Full reference** — [Gneol docs](https://gneol.github.io/docs/)
