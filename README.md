@@ -39,7 +39,7 @@ Deploy it and start chatting:
 ```bash
 gneol start
 # in another terminal:
-gneol deploy -f hello.gneol
+gneol deploy -f hello.gneol -i
 gneol
 # Hello World ❯ hi there
 # 💬 Hello! I'm your Hello World agent — ask me anything.
