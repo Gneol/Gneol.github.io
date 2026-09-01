@@ -38,117 +38,6 @@
     transform: translateY(-2px);
   }
   .contact-widget-btn svg { flex-shrink: 0; }
-  .contact-panel {
-    position: absolute;
-    bottom: 60px;
-    right: 0;
-    width: 340px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    background: rgba(13, 17, 23, 0.97);
-    border: 1px solid var(--border);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
-    opacity: 0;
-    transform: translateY(8px);
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .contact-panel.open {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-  .contact-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .contact-header h3 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--text);
-  }
-  .contact-close {
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    padding: 0 2px;
-    transition: color 0.15s;
-  }
-  .contact-close:hover { color: var(--text); }
-  .contact-sub {
-    padding: 12px 20px 2px;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: var(--text-dim);
-  }
-  .contact-form { padding: 18px 20px 20px; }
-  .contact-form label {
-    display: block;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-  .contact-form input,
-  .contact-form textarea {
-    width: 100%;
-    background: #0a0d12;
-    border: 1px solid var(--border);
-    border-radius: 0;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.85rem;
-    padding: 10px 12px;
-    margin-bottom: 16px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    border-color: var(--accent-2);
-    box-shadow: 0 0 0 1px rgba(0, 217, 245, 0.2);
-  }
-  .contact-form input:-webkit-autofill,
-  .contact-form textarea:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #0a0d12 inset;
-    -webkit-text-fill-color: var(--text);
-  }
-  .contact-form textarea { resize: vertical; min-height: 96px; }
-  .contact-form button {
-    width: 100%;
-    background: var(--accent-2);
-    color: #061214;
-    border: none;
-    padding: 12px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 0;
-    transition: background 0.15s, box-shadow 0.15s;
-  }
-  .contact-form button:hover {
-    background: #2be6ff;
-    box-shadow: 0 0 20px rgba(0, 217, 245, 0.35);
-  }
-  .contact-status {
-    font-size: 0.78rem;
-    color: #9fe8a8;
-    margin: 10px 0 0;
-    display: none;
-  }
-  .contact-status.error { color: #ff6b6b; }
   </style>
 
 
@@ -352,25 +241,18 @@
       </div>
     </section>
 
-    <section id="newsletter" class="newsletter">
+    <section id="community" class="community">
       <div class="section-inner">
         <h2 class="section-title">Stay in the loop</h2>
         <p class="section-sub">
-          News, updates, and new features — straight to your inbox. No spam.
+          <a href="https://github.com/Gneol/Gneol" target="_blank" rel="noopener">Watch the repo on GitHub</a> to get notified about releases and updates. Found a bug or have a question?
+          <a href="mailto:tentarclesai@gmail.com?subject=Gneol%20feedback">Email us</a>.
         </p>
-        <form class="newsletter-form" id="newsletter-form">
-          <input
-            type="email"
-            id="newsletter-email"
-            name="email"
-            placeholder="you@example.com"
-            required
-          />
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-        <p class="newsletter-status" id="newsletter-status" role="status"></p>
       </div>
     </section>
+
+    <!-- Newsletter fallback (hidden) -->
+    <div id="newsletter-form" style="display:none;"></div>
 
     <footer class="footer">
       <div class="section-inner">
@@ -388,92 +270,7 @@
           >
         </p>
       </div>
-    </footer>
 
-    
-<div class="contact-widget">
-  <div class="contact-panel" id="contact-panel" role="dialog" aria-label="Contact us">
-    <div class="contact-header">
-      <h3>Contact us</h3>
-      <button class="contact-close" id="contact-close" aria-label="Close">&times;</button>
-    </div>
-    <div class="contact-sub">Questions, feedback, or a bug report — we read everything.</div>
-    <form class="contact-form" id="contact-form">
-      <label for="contact-name">Name</label>
-      <input type="text" id="contact-name" name="name" placeholder="Your name" required />
-      <label for="contact-email">Email</label>
-      <input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
-      <label for="contact-message">Message</label>
-      <textarea id="contact-message" name="message" placeholder="How can we help?" required></textarea>
-      <button type="submit">Send message</button>
-      <p class="contact-status" id="contact-status" role="status"></p>
-    </form>
-  </div>
-  <button class="contact-widget-btn" id="contact-widget-btn" aria-label="Contact us" title="Contact us">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-    </svg>
-  </button>
-</div>
-
-<script>
-  // Contact widget
-  (function () {
-    var btn = document.getElementById("contact-widget-btn");
-    var panel = document.getElementById("contact-panel");
-    var form = document.getElementById("contact-form");
-    var status = document.getElementById("contact-status");
-    var closeBtn = document.getElementById("contact-close");
-    if (!btn || !panel || !form) return;
-
-    btn.addEventListener("click", function () {
-      panel.classList.toggle("open");
-    });
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", function () {
-        panel.classList.remove("open");
-      });
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var data = new FormData(form);
-      data.append("_subject", "Gneol website contact");
-      data.append("_template", "table");
-      status.style.display = "block";
-      status.textContent = "Sending...";
-      status.classList.remove("error");
-      fetch("https://formsubmit.co/ajax/tentarclesai@gmail.com", {
-        method: "POST",
-        body: data,
-        headers: { "Accept": "application/json" }
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res.success === "false" || res.error) throw new Error(res.message || "Error");
-          status.textContent = "✓ Message sent. We'll get back to you.";
-          form.reset();
-          setTimeout(function () { status.style.display = "none"; }, 5000);
-        })
-        .catch(function (err) {
-          status.classList.add("error");
-          status.textContent = "Failed to send. Email us: tentarclesai@gmail.com";
-        });
-    });
-
-    // ESC closes the panel
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") panel.classList.remove("open");
-    });
-
-    // Click outside closes the panel
-    document.addEventListener("click", function (e) {
-      if (!e.target.closest(".contact-widget")) panel.classList.remove("open");
-    });
-  })();
-</script>
-
-<script src="script.js"></script>
+</footer>
 </body>
 </html>
