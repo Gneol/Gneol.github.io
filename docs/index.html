@@ -257,7 +257,9 @@ Getting Started</h2>
   .model("fast-llm")</code></pre>
         <div class="note"><strong>Note:</strong> model tags that are not declared in the file must already exist on the local runtime (e.g. pre-cached tags shipped with fresh installs or added via <code>gneol model</code>).</div>
         <p>Save it as <code>hello.gneol</code>, then deploy:</p>
-<pre><code>gneol deploy -f hello.gneol</code></pre>
+<pre><code>gneol deploy -f hello.gneol -i</code></pre>
+        <p>This deploys the program and starts an interactive chat session. To watch the file and redeploy automatically on every save, use <code>-w</code> instead:</p>
+<pre><code>gneol deploy -f hello.gneol -w</code></pre>
         <p>Then talk to your agent:</p>
 <pre><code>gneol        # start an interactive session in the current directory
 gneol -a     # list and select an existing agent, then start chatting</code></pre>
@@ -302,7 +304,9 @@ Path Resolution</h2>
 Installation &amp; Deployment</h2>
         <p>Programs are deployed with the Gneol CLI. Start the runtime first if it isn't already running:</p>
 <pre><code>gneol start          # start the runtime (--daemonize to run in background)
-gneol deploy -f path/to/file.gneol</code></pre>
+gneol deploy -f path/to/file.gneol          # deploy once
+gneol deploy -f path/to/file.gneol -i       # deploy, then start an interactive session
+gneol deploy -f path/to/file.gneol -w       # watch the file and redeploy on save</code></pre>
         <p><code>deploy</code> reconciles runtime state with your <code>.gneol</code> script:</p>
         <ol>
           <li>Parses the <code>.gneol</code> file and its <code>import()</code>s.</li>
@@ -313,6 +317,7 @@ gneol deploy -f path/to/file.gneol</code></pre>
           <li>Rebuilds the agent's function list so new tools are immediately available.</li>
         </ol>
         <div class="note"><strong>Note:</strong> some sync steps (e.g., MCP connections) require a runtime restart to take full effect.</div>
+        <p>Use <code>-i</code> to jump straight into a chat after deploying, or <code>-w</code> to watch your <code>.gneol</code> file and auto-redeploy every time you save.</p>
         <h3>Other useful commands</h3>
         <table>
           <tr><th>Command</th><th>Purpose</th></tr>
