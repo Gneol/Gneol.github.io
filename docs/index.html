@@ -166,34 +166,7 @@
         }
       }
       .mobile-nav { display: none; }
-      /* Contact widget */
-      .contact-widget {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 999;
-        font-family: inherit;
-      }
-      .contact-widget-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        background: var(--accent-2);
-        color: #061214;
-        border: none;
-        cursor: pointer;
-        border-radius: 0;
-        box-shadow: 0 0 0 1px rgba(0, 217, 245, 0.25), 0 6px 20px rgba(0, 0, 0, 0.45);
-        transition: box-shadow 0.2s, transform 0.2s;
-      }
-      .contact-widget-btn:hover {
-        box-shadow: 0 0 28px rgba(0, 217, 245, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
-        transform: translateY(-2px);
-      }
-      .contact-widget-btn svg { flex-shrink: 0; }
-      
+    
     </style>
     <noscript><style>.doc-section { display: block !important; }</style></noscript>
   </head>
@@ -246,6 +219,14 @@ Installation</h2>
 <pre><code>curl -sSL https://raw.githubusercontent.com/Gneol/Gneol/main/install.sh | bash -s -- --version v1.0.0</code></pre>
         <h3>Manual download</h3>
         <p>Download from the <a href="https://github.com/Gneol/Gneol/releases" target="_blank" rel="noopener">Releases</a> page.</p>
+        <h3>VS Code extension</h3>
+        <p>
+          Get syntax highlighting, autocomplete, and documentation for
+          <code>.gneol</code> files with the official
+          <a href="https://marketplace.visualstudio.com/items?itemName=Gneol.gneol-intellisense" target="_blank" rel="noopener">Gneol IntelliSense</a>
+          extension for Visual Studio Code.
+        </p>
+<pre><code>code --install-extension Gneol.gneol-intellisense</code></pre>
 
         
 </div>

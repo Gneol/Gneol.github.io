@@ -10,35 +10,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
 
-  <style>
-  /* Contact widget */
-  .contact-widget {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 999;
-    font-family: inherit;
-  }
-  .contact-widget-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: var(--accent-2);
-    color: #061214;
-    border: none;
-    cursor: pointer;
-    border-radius: 0;
-    box-shadow: 0 0 0 1px rgba(0, 217, 245, 0.25), 0 6px 20px rgba(0, 0, 0, 0.45);
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .contact-widget-btn:hover {
-    box-shadow: 0 0 28px rgba(0, 217, 245, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
-  }
-  .contact-widget-btn svg { flex-shrink: 0; }
-  </style>
+
 
 
 
@@ -52,6 +24,7 @@
           <a href="#program">Program</a>
           <a href="#deploy">Deploy</a>
           <a href="#features">Features</a>
+          <a href="#vscode">VS Code</a>
           <a href="docs/">Docs</a>
           <a
             href="https://github.com/Gneol/Gneol"
@@ -236,6 +209,51 @@
               Precompiled binaries for macOS arm64 and Linux x64. One install
               command gets you going.
             </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vscode" class="about">
+      <div class="section-inner">
+        <h2 class="section-title">VS Code IntelliSense</h2>
+        <p class="section-sub">
+          Syntax highlighting, autocomplete, and inline docs for
+          <code>.gneol</code> files — right in your editor.
+        </p>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              <strong>Author <code>.gneol</code> files with confidence.</strong>
+            </p>
+            <p>
+              Install the official
+              <a
+                href="https://marketplace.visualstudio.com/items?itemName=Gneol.gneol-intellisense"
+                target="_blank"
+                rel="noopener"
+                >Gneol IntelliSense extension</a
+              >
+              and get syntax highlighting, autocomplete, and documentation
+              tooltips for every directive.
+            </p>
+            <p>
+              <a
+                href="https://marketplace.visualstudio.com/items?itemName=Gneol.gneol-intellisense"
+                class="btn btn-primary"
+                target="_blank"
+                rel="noopener"
+                >Install from Marketplace</a
+              >
+            </p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="terminal-dots"><span></span><span></span><span></span></span>
+              <span class="terminal-title">bash — install</span>
+            </div>
+            <pre class="terminal-body"><code><span class="t-prompt">$</span> code --install-extension Gneol.gneol-intellisense
+<span class="t-ok">✓</span> Installed Gneol IntelliSense extension.</code></pre>
           </div>
         </div>
       </div>
