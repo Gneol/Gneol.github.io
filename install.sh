@@ -110,7 +110,4 @@ echo ""
 echo "✅ Gneol installed!"
 echo "   gneol              → $INSTALL_DIR/gneol"
 echo ""
-echo "Starting Gneol..."
-"$INSTALL_DIR/gneol" start
-
 echo "Run 'gneol --help' to get started."
